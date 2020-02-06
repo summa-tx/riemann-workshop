@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "ee2a06388281dc162ba717b4a1a05fec0abb7fded4644a2a6700f5065f03cabc"
+            "sha256": "de27953faa41ab646e0096f85770566bacc83374aa0c3590bce43ae300053368"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -43,6 +43,14 @@
             ],
             "markers": "implementation_name == 'cpython'",
             "version": "==0.10.1"
+        },
+        "ecdsa": {
+            "hashes": [
+                "sha256:867ec9cf6df0b03addc8ef66b56359643cb5d0c1dc329df76ba7ecfe256c8061",
+                "sha256:8f12ac317f8a1318efa75757ef0a651abe12e51fc1af8838fb91079445227277"
+            ],
+            "index": "pypi",
+            "version": "==0.15"
         },
         "ecpy": {
             "hashes": [

@@ -15,6 +15,7 @@ pytest = "*"
 riemann-tx = "==2.1.0"
 riemann-ledger = "*"
 flake8 = "*"
+ecdsa = "*"
 
 [requires]
 python_version = "3.7"

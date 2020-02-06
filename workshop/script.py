@@ -1,5 +1,9 @@
-from riemann import script
+from riemann import simple
+from riemann.tx import tx_builder
 from riemann import utils as rutils
+from riemann.encoding import addresses
+
+from riemann import tx
 
 # Needs a 32 byte hash, alice's pubkeyhash, a timeout, and bob's pubkeyhash
 htlc_script = \
@@ -36,11 +40,39 @@ def build_htlc_script(
         pkh1=rutils.sha256(funder_pkh).hex())
 
 
-def build_serialized_htlc_script(
+def htlc_address(
     secret_hash: bytes,
     redeemer_pkh: bytes,
     timeout: int,
     funder_pkh: bytes
-) -> bytes:
+) -> str:
     s = build_htlc_script(secret_hash, redeemer_pkh, timeout, funder_pkh)
-    return script.serialize(s)
+    return addresses.make_p2wsh_address(s)
+
+
+def p2htlc_output(
+    value: int,
+    secret_hash: bytes,
+    redeemer_pkh: bytes,
+    timeout: int,
+    funder_pkh: bytes
+) -> tx.TxOut:
+    address = htlc_address(secret_hash, redeemer_pkh, timeout, funder_pkh)
+    return simple.output(value, address)
+
+
+def htlc_refund_witness(
+    htlc_script: str,
+    signature: bytes,
+    pubkey: bytes
+) -> tx.InputWitness:
+    return tx_builder.make_witness([signature, pubkey, b'\x00'])
+
+
+def htlc_execute_witness(
+    htlc_script: str,
+    signature: bytes,
+    pubkey: bytes,
+    secret: bytes
+) -> tx.InputWitness:
+    return tx_builder.make_witness([signature, pubkey, secret, b'\x01'])

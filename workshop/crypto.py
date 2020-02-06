@@ -1,6 +1,8 @@
 from ecdsa import SigningKey, SECP256k1
 from ecdsa.util import sigencode_der_canonize
 
+from typing import cast
+
 
 def sign_digest(digest: bytes, privkey: bytes) -> bytes:
     signing_key = SigningKey.from_string(privkey, SECP256k1)
@@ -8,14 +10,12 @@ def sign_digest(digest: bytes, privkey: bytes) -> bytes:
         digest=digest,
         sigencode=sigencode_der_canonize
     )
-    return sig
-
+    return cast(bytes, sig)
 
 
 def priv_to_pub(privkey: bytes) -> bytes:
     pubkey = SigningKey.from_string(privkey, SECP256k1).verifying_key
     return compress_pubkey(pubkey.to_string())
-
 
 
 def compress_pubkey(pubkey: bytes) -> bytes:

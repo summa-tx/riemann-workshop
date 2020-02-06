@@ -51,9 +51,10 @@ def move_utxo_to_address(
     index: int,
     value: int,
     address: str,
-    privkey: bytes
+    privkey: bytes,
+    fee: int = 0
 ) -> tx.Tx:
-    transaction = spend_utxo_to_address(tx_id, index, value, address)
+    transaction = spend_utxo_to_address(tx_id, index, value - fee, address)
     witness = make_wpkh_witness(transaction, 0, value, privkey)
     signed_tx = transaction.copy(tx_witnesses=[witness])
     return signed_tx

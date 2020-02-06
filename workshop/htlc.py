@@ -1,7 +1,10 @@
-from riemann import simple
 from riemann.tx import tx_builder
+from riemann import simple, script
 from riemann import utils as rutils
 from riemann.encoding import addresses
+
+from workshop import crypto
+from workshop.transactions import spend_utxo
 
 from riemann import tx
 
@@ -66,7 +69,8 @@ def htlc_refund_witness(
     signature: bytes,
     pubkey: bytes
 ) -> tx.InputWitness:
-    return tx_builder.make_witness([signature, pubkey, b'\x00'])
+    serialized = script.serialize(htlc_script)
+    return tx_builder.make_witness([signature, pubkey, b'\x00', serialized])
 
 
 def htlc_execute_witness(
@@ -76,3 +80,61 @@ def htlc_execute_witness(
     secret: bytes
 ) -> tx.InputWitness:
     return tx_builder.make_witness([signature, pubkey, secret, b'\x01'])
+
+
+def refund_htlc_transaction(
+    secret_hash: bytes,
+    redeemer_pkh: bytes,
+    timeout: int,
+    funder_pkh: bytes,
+    tx_id: str,
+    index: int,
+    value: int,
+    address: str
+) -> tx.Tx:
+    tx_in = spend_utxo(tx_id, index)
+    tx_out = simple.output(value, address)
+    return simple.unsigned_witness_tx(  # type: ignore
+        tx_ins=[tx_in],
+        tx_outs=[tx_out],
+        locktime=timeout)
+
+
+def signed_refund_htlc_transaction(
+    secret_hash: bytes,
+    redeemer_pkh: bytes,
+    timeout: int,
+    funder_pkh: bytes,
+    tx_id: str,
+    index: int,
+    prevout_value: int,
+    address: str,
+    privkey: bytes,
+    fee: int = 0
+) -> tx.Tx:
+    # build the unsigned version of the transaction
+    t = refund_htlc_transaction(
+        secret_hash,
+        redeemer_pkh,
+        timeout,
+        funder_pkh,
+        tx_id,
+        index,
+        prevout_value - fee,
+        address)
+
+    # Prep the sighash
+    s = build_htlc_script(secret_hash, redeemer_pkh, timeout, funder_pkh)
+    serialized_script = script.serialize(s)
+    script_len = len(serialized_script)
+    prepended_script = tx.VarInt(script_len).to_bytes() + serialized_script
+    sighash = t.sighash_all(
+        index=index,
+        script=prepended_script,
+        prevout_value=rutils.i2le_padded(prevout_value, 8))
+
+    # sign it and make the witness
+    signature = crypto.sign_digest(sighash, privkey)
+    witness = htlc_refund_witness(s, signature, crypto.priv_to_pub(privkey))
+
+    return t.copy(tx_witnesses=[witness])

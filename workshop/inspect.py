@@ -20,18 +20,16 @@ num_txns_len = len(num_txns)
 txn_bytes = block_bytes[80 + num_txns_len:]
 
 offset = 0
-
 txns: List[tx.Tx] = []
 
 for i in range(num_txns.number):
     try:
-        transaction = tx.Tx.from_bytes(txn_bytes[offset:])
-        txns.append(transaction)
+        txns.append(tx.Tx.from_bytes(txn_bytes[offset:]))
         offset += len(transaction)
-        # print(t.tx_id.hex())
     except ValueError:
         print()
         print(f'Errored after {len(txns)} txns')
+        print('please file an issue')
         print(txn_bytes[offset:].hex())
         break
 

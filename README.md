@@ -17,6 +17,11 @@
 1. install the workshop dependencies
   1. `pipenv install --python=$(pyenv which python3.7)`
 
-## How To Workshop
+## Workshop Layout
 
 Documentation for riemann tx library: https://summa-tx.github.io/riemann/
+
+1. `script.py` gives examples for working with scripts
+1. `transactions.py` has examples for making and signing basic transactions
+1. `inspect.py` is an example block parser that computes simple block stats
+1. `htlc.py` shows how to build a custom script and spend from it

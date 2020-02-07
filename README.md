@@ -22,7 +22,6 @@
 Documentation for riemann tx library: https://summa-tx.github.io/riemann/
 
 1. `crypto.py` - some siple crypto tools
-1. `script.py` - examples for working with scripts
 1. `transactions.py` - examples for making and signing basic transactions
 1. `inspect.py` - an example block parser that computes simple block stats
 1. `htlc.py` - how to build a custom script and spend from it

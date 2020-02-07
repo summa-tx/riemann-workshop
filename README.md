@@ -2,6 +2,12 @@
 
 1. install pyenv
     1. `curl https://pyenv.run | bash`
+    1. add this to your `~/.bashrc`
+    ```
+      export PATH="$HOME/.pyenv/bin:$PATH"
+      eval "$(pyenv init -)"
+      eval "$(pyenv virtualenv-init -)"
+      ```
     1. restart shell
     1. run `pyenv which python` to ensure it worked
 1. install python 3.7

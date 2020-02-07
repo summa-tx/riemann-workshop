@@ -20,8 +20,12 @@ def fake_privkey() -> bytes:
 def new_privkey() -> bytes:
     '''
     Generate a new private key from os entropy
+
     Check out riemann-keys for a full BIP32/39/44 ~experience~
     https://github.com/summa-tx/riemann-keys
+
+    Even better: use riemann-ledger to connect to a ledger hardware wallet
+    https://github.com/summa-tx/riemann-ledger
 
     # WARNING: This is not best practices.
     '''

@@ -9,7 +9,7 @@
       eval "$(pyenv virtualenv-init -)"
       ```
     1. restart shell
-    1. run `pyenv which python` to ensure it worked
+    1. `pyenv --version` to ensure it worked
 1. install python 3.7
     1. `pyenv install 3.7.0`
 1. install pipenv

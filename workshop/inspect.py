@@ -21,6 +21,7 @@ def as_btc(sats: float) -> str:
     '''
     return f'{sats / 100_000_000:.8f} BTC'
 
+
 # The first 80 bytes of a block is the header
 header = block_bytes[:80]
 
@@ -40,7 +41,7 @@ txns: List[tx.Tx] = []
 for i in range(num_txns.number):
     try:
         txns.append(tx.Tx.from_bytes(txn_bytes[offset:]))
-        offset += len(transaction)
+        offset += len(txns[-1])
     except ValueError:
         print()
         print(f'Errored after {len(txns)} txns')

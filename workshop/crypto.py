@@ -70,7 +70,7 @@ def priv_to_pub(privkey: bytes) -> bytes:
     '''
     Return the compressed public key corresponding to a private key.
     SegWit txns enforce the use of compressed pubkeys. In legacy txns, you
-    may still use uncompressed keys. 
+    may still use uncompressed keys.
 
     Args:
         privkey: a 32-byte private key
